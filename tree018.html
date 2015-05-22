@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <script src="snap.svg-min.js"></script>
+  <script src="jquery-2.1.4.min.js"></script>
+
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { text-align: center; }
+
+#tree {
+	border: 1px solid #333;
+	//width: 600px;
+	//height: 600px;
+	margin: 0 auto;
+}
+</style>
+
+<script>
+
+function getOpposite(radius, adj)
+{
+	tan = Math.tan(Snap.rad(radius));
+	return (adj * tan);
+}
+
+function line(l, lh, sr)
+{
+	return ((l-1) * lh) + sr;
+}
+
+function Sphere(snap, pillar, sline, line_height, sphere_radius)
+{
+	var x = pillar;
+	var y = line(sline, line_height, sphere_radius);
+	var r = sphere_radius;
+
+	var sphere = snap.circle(x,y,r)
+			.attr({stroke:'black',fill:'white'}); 
+
+	var tdot= snap.circle(x,y,3).attr({stroke:'black'});
+
+	var tpp = snap.path("M{x},{y} m{r},0 a{r},{r} 0 0 0 " + (-r*2) + ",0" );
+	var ttext = snap.text(0,0,"TOP")
+		.attr({textpath:tpp,textAnchor:'middle',fill:'black'})
+		.textPath.attr({startOffset: '50%'});
+
+	var btp = snap.path("M{x},{y} m-{r},0 a{r},{r} 0 0 0 " + (r*2) + ",0");
+	var btext = snap.text(0,0,"BOTTOM").attr({textpath:btp,textAnchor:'middle',fill:'black'}).textPath.attr({startOffset: '50%'});
+
+	//tsphere.append(tdot);
+	//tsphere.append(btext);
+
+	return sphere; 
+}
+
+function Path(snap,s1,s2,path_height)
+{
+	var x1 = parseFloat(s1.attr('cx'));
+	var y1 = parseFloat(s1.attr('cy'));
+	var x2 = parseFloat(s2.attr('cx'));
+	var y2 = parseFloat(s2.attr('cy'));
+
+	var d = Math.sqrt(Math.pow(Math.abs(x2-x1),2) + Math.pow(Math.abs(y2-y1),2));
+	var dx = ((x1 + x2) / 2) - d/2;
+	var dy = ((y1 + y2) / 2) - path_height/2;
+
+	var deg = ((x2 <= x1) ? -(Snap.deg(Math.asin((y2-y1)/d))) : +(Snap.deg(Math.asin((y2-y1)/d))) );	
+
+	var path1 = snap.rect(dx,dy,d,path_height).attr({fill:'white',stroke:'black'});
+	path1.transform("r"+deg);
+
+	var tx = ((x1 + x2) / 2);
+	var ty = ((y1 + y2) / 2);
+	var text = snap.text(tx,ty,"TEXT")
+		.attr({textAnchor:'middle',alignmentBaseline:'middle',fill:'black'})
+		.transform("r"+deg);
+
+	return path1;
+}
+
+var TreeOfLife = function(width, el)
+{
+	var center = width / 2;
+        var height = width * 3; //line_height * number of lines (9)
+	var sphere_diameter = width * 0.234375;
+	var sphere_radius = sphere_diameter/2;
+	var degrees = 30;
+	var frame_width = width - sphere_diameter;
+	var frame_center = frame_width/2;
+	var line_height = getOpposite(degrees,frame_center);
+	var path_height = frame_width * 0.0546875;
+
+        var height = line_height * 9 + 10; // sphere stroke *2
+
+	var middle_pillar = center;
+	var left_pillar = sphere_radius;
+	var right_pillar = width - sphere_radius;
+	
+	$(el).width(width).height(height);
+
+	var s = Snap(el);
+
+	var s1 = Sphere(s,center,1,line_height,sphere_radius);
+	var s2 = Sphere(s,right_pillar,2, line_height, sphere_radius);
+	var s3 = Sphere(s,left_pillar,2, line_height, sphere_radius);
+	var s4 = Sphere(s,right_pillar,4, line_height, sphere_radius);
+	var s5 = Sphere(s,left_pillar,4, line_height, sphere_radius);
+	var s6 = Sphere(s,middle_pillar,5, line_height, sphere_radius);
+	var s7 = Sphere(s,right_pillar,6, line_height, sphere_radius);
+	var s8 = Sphere(s,left_pillar,6, line_height, sphere_radius);
+	var s9 = Sphere(s,middle_pillar,7, line_height, sphere_radius);
+	var s10 = Sphere(s,middle_pillar,9, line_height, sphere_radius);
+	var s11 = Sphere(s,middle_pillar,3, line_height, sphere_radius);
+
+	var p11 = Path(s,s1,s2,path_height);
+	var p12 = Path(s,s1,s3,path_height);
+	var p13 = Path(s,s1,s6,path_height);
+	var p14 = Path(s,s2,s3,path_height);
+	var p15 = Path(s,s2,s6,path_height);
+	var p16 = Path(s,s2,s4,path_height);
+	var p17 = Path(s,s3,s6,path_height);
+	var p18 = Path(s,s3,s5,path_height);
+	var p19 = Path(s,s4,s5,path_height);
+	var p20 = Path(s,s4,s6,path_height);
+	var p21 = Path(s,s4,s7,path_height);
+	var p22 = Path(s,s5,s6,path_height);
+	var p23 = Path(s,s5,s8,path_height);
+	var p24 = Path(s,s6,s7,path_height);
+	var p25 = Path(s,s6,s8,path_height);
+	var p26 = Path(s,s6,s9,path_height);
+	var p27 = Path(s,s8,s7,path_height);
+	var p28 = Path(s,s7,s9,path_height);
+	var p29 = Path(s,s7,s10,path_height);
+	var p20 = Path(s,s8,s9,path_height);
+	var p31 = Path(s,s8,s10,path_height);
+	var p32 = Path(s,s9,s10,path_height);
+
+
+	s1.use();
+	s2.use();
+	s3.use();
+	s4.use();
+	s5.use();
+	s6.use();
+	s7.use();
+	s8.use();
+	s9.use();
+	s10.use();
+	s11.use();
+
+}
+
+$(document).ready(function(){
+	var myTree = TreeOfLife(600,"#tree");
+
+});
+</script>
+
+</head>
+
+<body>
+<svg id="tree"></svg>
+
+</body>
+
+</html>

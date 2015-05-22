@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+  </style>
+
+  <script src="snap.svg-min.js"></script>
+  <script src="jquery-2.1.4.min.js"></script>
+
+<style>
+#tree {
+//	border: 1px solid #333;
+	//width: 600px;
+	//height: 600px;
+}
+</style>
+
+<script>
+function deg2rad(deg)
+{
+	return deg * Math.PI / 180;
+}
+
+function getOpposite(radius, adj)
+{
+	tan = Math.tan(Snap.rad(radius));
+	return (adj * tan);
+}
+
+function getHypo(radius, adj)
+{
+	var cos = Math.cos(Snap.rad(radius));
+	return adj / cos;
+}
+
+function line(l, lh, sr)
+{
+	return ((l-1) * lh) + sr;
+}
+
+//function Path()
+
+function TreeOfLife(width, el)
+{
+	var center = width / 2;
+        var height = width * 3;
+	var sphere_diameter = width * 0.234375;
+	var sphere_radius = sphere_diameter/2;
+	var degrees = 30;
+	var frame_width = width - sphere_diameter;
+	var frame_center = frame_width/2;
+	var line_height = getOpposite(degrees,frame_center);
+	var path_height = frame_width * 0.0546875;
+
+	var middle_pillar = center;
+	var left_pillar = sphere_radius;
+	var right_pillar = width - sphere_radius;
+	
+	var s = Snap("#tree");
+	var s1 = s.circle(center,line(1, line_height, sphere_radius),sphere_radius);
+	var s2 = s.circle(right_pillar,line(2, line_height, sphere_radius),sphere_radius);
+	var s3 = s.circle(left_pillar,line(2, line_height, sphere_radius),sphere_radius);
+	var s4 = s.circle(right_pillar,line(4, line_height, sphere_radius),sphere_radius);
+	var s5 = s.circle(left_pillar,line(4, line_height, sphere_radius),sphere_radius);
+	var s6 = s.circle(middle_pillar,line(5, line_height, sphere_radius),sphere_radius);
+	var s7 = s.circle(right_pillar,line(6, line_height, sphere_radius),sphere_radius);
+	var s8 = s.circle(left_pillar,line(6, line_height, sphere_radius),sphere_radius);
+	var s9 = s.circle(middle_pillar,line(7, line_height, sphere_radius),sphere_radius);
+	var s10 = s.circle(middle_pillar,line(8, line_height, sphere_diameter),sphere_radius);
+	var s11 = s.circle(middle_pillar,line(3, line_height, sphere_radius),sphere_radius);
+
+//	var path = s.rect(x,y,hypo,path_height)
+/*
+   x = hypo + offset/2
+   left_x = (width/2)/2;
+   y= ( (line_height/2) - (path_height/2) ) + line-offset
+ */
+	var hypo = getHypo(30,frame_center);	
+	//x = ((width/2)/2) - (hypo/2);
+	//x = (((hypo)/2)) -sphere_radius;
+//	 x = ( (frame_center/2) - hypo/4 )+4; // WORKIG ALMOST PERFECTLY
+	x = ( (frame_center/2) - sphere_radius );
+	y = ( (line_height/2) - (path_height/2) ) + sphere_radius;
+	//var path1 = s.rect(x,y,hypo,path_height).transform("r-30");
+
+//	var path1 = s.rect(x,y,hypo,path_height).attr({fill:'black',stroke:'white'});
+//	path1.transform("r-30");
+
+	$(el).width(width).height(height);
+	var x1 = parseFloat(s1.attr('cx'));
+	var y1 = parseFloat(s1.attr('cy'));
+	var x2 = parseFloat(s2.attr('cx'));
+	var y2 = parseFloat(s2.attr('cy'));
+
+	//d=(x2-x1)^2+(y2-y1^2)
+	var d = Math.sqrt(Math.pow(Math.abs(x2-x1),2) + Math.pow(Math.abs(y2-y1),2));
+	var dx = ((x1 + x2) / 2) - d/2;
+	var dy = ((y1 + y2) / 2) - path_height/2;
+
+	var deg = ((x2 <= x1) ? -(Snap.deg(Math.asin((y2-y1)/d))) : +(Snap.deg(Math.asin((y2-y1)/d))) );	
+
+	var path1 = s.rect(dx,dy,d,path_height).attr({fill:'black',stroke:'white'});
+	path1.transform("r"+deg);
+/*
+ if x2<x1 -rot, ie, -30
+ if x2>x1 +rot, ie., +30
+ if x2==x1, -rot, ie, -90
+ */ 
+	var dot1= s.circle(s1.attr('cx'),s1.attr('cy'),1).attr({stroke:'white'});
+	var dot3= s.circle(s3.attr('cx'),s3.attr('cy'),1).attr({stroke:'white'});
+
+}
+
+$(document).ready(function(){
+	TreeOfLife(600,"#tree");
+});
+</script>
+
+</head>
+
+<body>
+<svg id="tree"></svg>
+
+</body>
+
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <style>
+    * { box-sizing: border-box; }
+    html, body { margin: 0; }
+  </style>
+
+  <script src="snap.svg-min.js"></script>
+  <script src="jquery-2.1.4.min.js"></script>
+
+<style>
+#tree {
+	border: 1px solid #333;
+	//width: 600px;
+	//height: 600px;
+}
+</style>
+
+<script>
+function deg2rad(deg)
+{
+	return deg * Math.PI / 180;
+}
+
+function getOpposite(radius, adj)
+{
+	tan = Math.tan(deg2rad(radius));
+	return (adj * tan);
+}
+
+function line(l, lh, sr)
+{
+	return ((l-1) * lh) + sr;
+}
+
+function TreeOfLife(width, el)
+{
+	var center = width / 2;
+        var height = width * 3;
+	var sphere_diameter = width * 0.234375;
+	var sphere_radius = sphere_diameter/2;
+	var degrees = 30;
+	var line_height = getOpposite(degrees,center);
+
+	var middle_pillar = center;
+	var left_pillar = sphere_radius;
+	var right_pillar = width - sphere_radius;
+	
+	var s = Snap("#tree");
+	var bigCircle = s.circle(center,line(1, line_height, sphere_radius),sphere_radius);
+	var scndCircle = s.circle(right_pillar,line(2, line_height, sphere_radius),sphere_radius);
+	var thrdCircle = s.circle(left_pillar,line(2, line_height, sphere_radius),sphere_radius);
+	var frthCircle = s.circle(middle_pillar,line(3, line_height, sphere_radius),sphere_radius);
+	var fiftCircle = s.circle(right_pillar,line(4, line_height, sphere_radius),sphere_radius);
+	var sixtCircle = s.circle(left_pillar,line(4, line_height, sphere_radius),sphere_radius);
+	var svntCircle = s.circle(middle_pillar,line(5, line_height, sphere_radius),sphere_radius);
+	var eigtCircle = s.circle(right_pillar,line(6, line_height, sphere_radius),sphere_radius);
+	var nintCircle = s.circle(left_pillar,line(6, line_height, sphere_radius),sphere_radius);
+	var tentCircle = s.circle(middle_pillar,line(7, line_height, sphere_radius),sphere_radius);
+	var tfstCircle = s.circle(middle_pillar,line(8, line_height, sphere_radius),sphere_radius);
+	$(el).width(width).height(height);
+}
+
+$(document).ready(function(){
+	TreeOfLife(600,"#tree");
+});
+</script>
+
+</head>
+
+<body>
+<svg id="tree"></svg>
+
+</body>
+
+</html>
