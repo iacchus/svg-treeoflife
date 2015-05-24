@@ -69,8 +69,8 @@ CLASSES               | what they are
 .sphere-middletext    | Text on center for all spheres alike.
 .sphere-bottom        | Text on bottom for all spheres alike.
 .path-rects           | *num* from 1 to 22. Rectangle [num] `<rect>` element.
-.path[num]-elements | All elements of each path: rectangle and text.
-.path-text |
+.path[num]-elements   | All elements of each path: rectangle and text.
+.path-text            | Text only of all paths alike. 
 
 #### CLASSES
 
