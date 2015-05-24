@@ -46,6 +46,34 @@ This is all, it should work.
 
 There are many CSS classes (.class) and html ids (#id) that you use to style your **svg** via CSS.
 
+### TL; DR.
+
+#### IDS
+
+IDS                     | what i do
+----------------------- | ---------------------------
+#sphere[num]            | *num* from 1 to 11 (daath), ex.: `#sphere6`
+#sphere[num]-toptext    | Text on top for a given sphere.
+#sphere[num]-middletext | Text on top for a given sphere.
+#sphere[num]-bottomtext | Text on top for a given sphere.
+#path[num]              | *num* from 1 to 22, ex.: `#path2`. `<rect>` of each path.
+#path[num]-text         | *num* from 1 to 22, ex.: `#path2` text of each path
+
+#### Classes
+
+CLASSES               | what they are
+--------------------- | -------------
+.sphere[num]-circs    |  *num* from 1 to 11 (daath). Sphere [num] `<circ>` element.     | 
+.sphere[num]-elements | All elements of each sphere: circle and texts.
+.sphere-toptext       | Text on top for all spheres alike.
+.sphere-middletext    | Text on center for all spheres alike.
+.sphere-bottom        | Text on bottom for all spheres alike.
+.path-rects           | *num* from 1 to 22. Rectangle [num] `<rect>` element.
+.path[num]-elements | All elements of each path: rectangle and text.
+.path-text |
+
+#### CLASSES
+
 ### IDS and CSS Classes to stylize svg elements via CSS or JS
 
 *sphere1* is Kether etc, *sphere11* is Daath.
@@ -107,3 +135,7 @@ This class stylize the text (svg `<text>` element) for all the paths alike.
 ### Tinkering with styles etc
 
 As this script uses jQuery, you can tinker with the Tree Of Life style using your browsers code inspector (in Chrome, press CTRL + Shift + I) to open it.
+
+## Extra documentation
+
+svg
