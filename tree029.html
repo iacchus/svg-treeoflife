@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+
+  <script src="snap.svg-min.js"></script>
+  <script src="jquery-2.1.4.min.js"></script>
+  <script src="svg-treeoflife.js"></script>
+
+<style>
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { text-align: center; }
+
+#tree {
+	//border: 1px solid #333;
+	//width: 600px;
+	//height: 600px;
+	margin: 1em;
+
+	font-size: 16px;
+}
+
+.sphere-middletext {
+	font-size: 1.6em;
+}
+
+.sphere11-elements {
+	fill-opacity: 0.3;
+	stroke-opacity: 0.2;
+}
+</style>
+
+<script>    
+$(document).ready(function(){
+	var myTree = TreeOfLife(300,"#tree");
+
+});
+</script>
+
+</head>
+
+<body>
+<svg id="tree"></svg>
+
+</body>
+
+</html>
