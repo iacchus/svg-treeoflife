@@ -1,5 +1,9 @@
 # Javascript Tree of life using SVG and HTML5
 
+## Demo
+
+https://kassius.github.io/svg-treeoflife
+
 ## Requirements
 
 jquery
@@ -134,7 +138,24 @@ This class stylize the text (svg `<text>` element) for all the paths alike.
 
 ### Tinkering with styles etc
 
-As this script uses jQuery, you can tinker with the Tree Of Life style using your browsers code inspector (in Chrome, press CTRL + Shift + I) to open it.
+As this script uses jQuery, you can tinker with the Tree Of Life style using your browsers code inspector (in Chrome, press CTRL + Shift + I) to open it, then for example:
+
+1. Enter https://kassius.github.io/svg-treeoflife
+2. If you are using chrome open code inspector (default Ctrl + Shift + i)
+3. Click the `console` tab, then enter some jQuery like this:
+
+`$('#sphere6').css({ fill: "#BF360C"});`
+*this changes sphere 6 fill color*
+
+`$('#sphere6-toptext').css({ fill: "#fff"});`
+`$('#sphere6-middletext').css({ fill: "#fff"});`
+`$('#sphere6-toptext').css({ fill: "#fff"});`
+*these change the sphere6 texts color*
+
+`$('.sphere-circs').css({ fill: "#ccc"});`
+*this changes the `<circ>` fill of all spheres alike.*
+
+ETC
 
 ## Extra documentation
 
