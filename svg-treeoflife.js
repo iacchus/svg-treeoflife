@@ -40,7 +40,11 @@ function TreeData(width,el,fontsize)
 
 function SphereData()
 {
-	uid = this.uid = 1;
+	uid = this.uid = 0;
+
+	this.nid = 0;
+
+	this.type = "sphere";
 
 	stroke = this.stroke = 'black';
 	fill = this.fill = 'white';
@@ -49,28 +53,35 @@ function SphereData()
 	tstroke = this.tstroke = 'none';
 	tfill = this.tfill = 'black';
 
+	this.opacity = 1;
+
 	this.text_top = {
 		text : "TOP LABEL",
 		stroke : this.tstroke,
-		fill : this.tfill
+		fill : this.tfill,
+		opacity : this.opacity
 	}
 
 	this.text_middle = {
 		text : "MIDDLE LABEL",
 		stroke : this.tstroke,
-		fill : this.tfill
+		fill : this.tfill,
+		opacity : this.opacity
 	}
 
 	this.text_bottom = {
 		text : "BOTTOM LABEL",
 		stroke : this.tstroke,
-		fill : this.tfill
-	};
+		fill : this.tfill,
+		opacity : this.opacity
+	}
 }
 
 function PathData()
 {
 	uid = this.uid = 1;
+	
+	this.type = "path";
 
 	stroke = this.stroke = 'black';
 	fill = this.fill = 'white';
@@ -78,7 +89,9 @@ function PathData()
 	tstroke = this.tstroke = 'none';
 	tfill = this.tfill = 'black';
 
-	text = this.text = "PATH";
+	ttext = this.text = "PATH";
+
+	this.opacity = 1;
 }
 
 // SPHERE
@@ -103,6 +116,14 @@ function Sphere(snap, pillar, sline, treedata)
 		tpad = treedata.textpadding;
 		rpad = r - tpad;
 
+		// SPHERE - create group
+		this.grp = snap.group()
+			.attr({
+				id:this.data.uid + "-group",
+				opacity: this.data.opacity
+			});
+			//.hover(HoverOnSphere(this.data.uid),HoverOutSphere(this.data.uid));
+
 		// SPHERE - draw circle
 		this.sphere = snap.circle(x,y,r)
 			.attr({
@@ -110,7 +131,9 @@ function Sphere(snap, pillar, sline, treedata)
 				class:'sphere-circs ' + this.data.uid + '-elements',
 				stroke : this.data.stroke,
 				fill : this.data.fill
-		       }); 
+			})
+			.appendTo(this.grp);
+			
 
 		// this drow a dot in the middle of each sphere
 		//this.middot= snap.circle(x,y,1).attr({stroke:'black'});
@@ -118,52 +141,59 @@ function Sphere(snap, pillar, sline, treedata)
 		// SPHERE - top text
 		this.tstr = this.data.text_top.text;
 		this.tpath = snap.path("M" + x + "," + y + " m" + (-rpad) + ",0 a" + rpad + "," + rpad + " 0 0 1 " + (rpad*2) + ",0" )
-			.attr({ fillOpacity:'0' });
+			.attr({ fillOpacity:'0' })
+			.appendTo(this.grp);
 		this.ttext = snap.text(0, 0, this.tstr)
 			.attr({
 				id:this.data.uid+"-toptext",
-				class:'sphere-toptext ' + this.data.uid + '-elements',
+				class:'sphere-toptext ' + this.data.uid + '-elements' + ' sphere-texts',
 				textpath: this.tpath,
 				textAnchor:'middle',
 				stroke:this.data.text_top.stroke,
 				fill:this.data.text_top.fill,
 			})
+			.appendTo(this.grp)
 			.textPath.attr({
 				startOffset: '50%',
 				alignmentBaseline:'text-before-edge'
 			});
+		//	.appendTo(this.grp);
 
 		// SPHERE - middle text
 		this.mstr = this.data.text_middle.text;
 		this.mtext = snap.text(x, y, this.mstr)
 			.attr({
 				id:this.data.uid+"-middletext",
-				class:'sphere-middletext ' + this.data.uid + '-elements',
+				class:'sphere-middletext ' + this.data.uid + '-elements' + ' sphere-texts',
 				textAnchor:'middle',
 				alignmentBaseline:'middle',
 				stroke:this.data.text_middle.stroke,
 				fill:this.data.text_middle.fill,
-			});
+			})
+			.appendTo(this.grp);
 
 		// SPHERE - bottom text
 		this.bstr = this.data.text_bottom.text;
 		this.bpath = snap.path("M" + x + "," + y + " m" + (-rpad) + ",0 a" + rpad + "," + rpad + " 0 0 0 " + (rpad*2) + ",0" )
 			.attr({
 				fillOpacity:'0'
-			});
+			})
+			.appendTo(this.grp);
 		this.btext = snap.text(0, 0, this.bstr)
 			.attr({
 				id:this.data.uid+"-bottomtext",
-				class:'sphere-bottomtext ' + this.data.uid + '-elements',
+				class:'sphere-bottomtext ' + this.data.uid + '-elements' + ' sphere-texts',
 				textpath:this.bpath,
 				textAnchor:'middle',
 				stroke:this.data.text_bottom.stroke,
 				fill:this.data.text_bottom.fill,
 			})
+			.appendTo(this.grp)
 			.textPath.attr({
 				startOffset: '50%',
 				alignmentBaseline:'text-after-edge'
 			});
+
 	}
 
 }
@@ -205,6 +235,14 @@ function Path(snap,s1,s2,treedata)
 
 		deg = this.deg;
 
+		// PATH - group of elements
+		
+		this.grp = snap.group()
+			.attr({
+				id:this.data.uid + "-group",
+				opacity: this.data.opacity
+			});
+
 		// PATH - element itself
 		this.path = snap.rect(dx,dy,d,path_height)
 			.attr({
@@ -213,7 +251,8 @@ function Path(snap,s1,s2,treedata)
 				fill:this.data.fill,
 				stroke:this.data.stroke,
 			})
-			.transform("r"+deg);
+			.transform("r"+deg)
+			.appendTo(this.grp);
 
 		// PATH - text
 		this.tx = tx = ((x1 + x2) / 2);
@@ -227,11 +266,12 @@ function Path(snap,s1,s2,treedata)
 				fill:this.data.tfill,
 				stroke:this.data.tstroke,
 			})
-		       .transform("r"+deg);
+			.transform("r"+deg)
+			.appendTo(this.grp);
 	}
 }
 
-var TreeOfLife = function(width, el)
+TreeOfLife = function(width, el)
 {
 	var fontsize = parseFloat($(el).css("font-size"));
 		
@@ -245,47 +285,51 @@ var TreeOfLife = function(width, el)
 
 	var path_height = treedata.path_height;//exclude me!!
 
-	var s = Snap(el);
+	var s = Snap(el).attr({
+		viewBox: "0 0 " + Math.round(treedata.width) + " " + Math.round(treedata.height),
+	        width: Math.round(treedata.width),
+		height: Math.round(treedata.height)
+	});
 
-	sp = Array();
-	sp[1] = new Sphere(s,center,1,treedata);
-	sp[2] = new Sphere(s,right_pillar,2,treedata);
-	sp[3] = new Sphere(s,left_pillar,2,treedata);
-	sp[4] = new Sphere(s,right_pillar,4,treedata);
-	sp[5] = new Sphere(s,left_pillar,4,treedata);
-	sp[6] = new Sphere(s,middle_pillar,5,treedata);
-	sp[7] = new Sphere(s,right_pillar,6,treedata);
-	sp[8] = new Sphere(s,left_pillar,6,treedata);
-	sp[9] = new Sphere(s,middle_pillar,7,treedata);
-	sp[10] = new Sphere(s,middle_pillar,9,treedata);
-	sp[11] = new Sphere(s,middle_pillar,3,treedata);
+	this.sp = Array();
+	this.sp[1] = new Sphere(s,center,1,treedata);
+	this.sp[2] = new Sphere(s,right_pillar,2,treedata);
+	this.sp[3] = new Sphere(s,left_pillar,2,treedata);
+	this.sp[4] = new Sphere(s,right_pillar,4,treedata);
+	this.sp[5] = new Sphere(s,left_pillar,4,treedata);
+	this.sp[6] = new Sphere(s,middle_pillar,5,treedata);
+	this.sp[7] = new Sphere(s,right_pillar,6,treedata);
+	this.sp[8] = new Sphere(s,left_pillar,6,treedata);
+	this.sp[9] = new Sphere(s,middle_pillar,7,treedata);
+	this.sp[10] = new Sphere(s,middle_pillar,9,treedata);
+	this.sp[11] = new Sphere(s,middle_pillar,3,treedata);
 
-	pt = Array();
-	pt[1] = new Path(s,sp[1],sp[2],treedata);
-	pt[2] = new Path(s,sp[1],sp[3],treedata);
-	pt[3] = new Path(s,sp[1],sp[6],treedata);
-	pt[4] = new Path(s,sp[2],sp[3],treedata);
-	pt[5] = new Path(s,sp[2],sp[6],treedata);
-	pt[6] = new Path(s,sp[2],sp[4],treedata);
-	pt[7] = new Path(s,sp[3],sp[6],treedata);
-	pt[8] = new Path(s,sp[3],sp[5],treedata);
-	pt[9] = new Path(s,sp[4],sp[5],treedata);
-	pt[10] = new Path(s,sp[4],sp[6],treedata);
-	pt[11] = new Path(s,sp[4],sp[7],treedata);
-	pt[12] = new Path(s,sp[5],sp[6],treedata);
-	pt[13] = new Path(s,sp[5],sp[8],treedata);
-	pt[14] = new Path(s,sp[6],sp[7],treedata);
-	pt[15] = new Path(s,sp[6],sp[8],treedata);
-	pt[16] = new Path(s,sp[6],sp[9],treedata);
-	pt[17] = new Path(s,sp[8],sp[7],treedata);
-	pt[18] = new Path(s,sp[7],sp[9],treedata);
-	pt[19] = new Path(s,sp[7],sp[10],treedata);
-	pt[20] = new Path(s,sp[8],sp[9],treedata);
-	pt[21] = new Path(s,sp[8],sp[10],treedata);
-	pt[22] = new Path(s,sp[9],sp[10],treedata);
+	this.pt = Array();
+	this.pt[1] = new Path(s,this.sp[1],this.sp[2],treedata);
+	this.pt[2] = new Path(s,this.sp[1],this.sp[3],treedata);
+	this.pt[3] = new Path(s,this.sp[1],this.sp[6],treedata);
+	this.pt[4] = new Path(s,this.sp[2],this.sp[3],treedata);
+	this.pt[5] = new Path(s,this.sp[2],this.sp[6],treedata);
+	this.pt[6] = new Path(s,this.sp[2],this.sp[4],treedata);
+	this.pt[7] = new Path(s,this.sp[3],this.sp[6],treedata);
+	this.pt[8] = new Path(s,this.sp[3],this.sp[5],treedata);
+	this.pt[9] = new Path(s,this.sp[4],this.sp[5],treedata);
+	this.pt[10] = new Path(s,this.sp[4],this.sp[6],treedata);
+	this.pt[11] = new Path(s,this.sp[4],this.sp[7],treedata);
+	this.pt[12] = new Path(s,this.sp[5],this.sp[6],treedata);
+	this.pt[13] = new Path(s,this.sp[5],this.sp[8],treedata);
+	this.pt[14] = new Path(s,this.sp[6],this.sp[7],treedata);
+	this.pt[15] = new Path(s,this.sp[6],this.sp[8],treedata);
+	this.pt[16] = new Path(s,this.sp[6],this.sp[9],treedata);
+	this.pt[17] = new Path(s,this.sp[8],this.sp[7],treedata);
+	this.pt[18] = new Path(s,this.sp[7],this.sp[9],treedata);
+	this.pt[19] = new Path(s,this.sp[7],this.sp[10],treedata);
+	this.pt[20] = new Path(s,this.sp[8],this.sp[9],treedata);
+	this.pt[21] = new Path(s,this.sp[8],this.sp[10],treedata);
+	this.pt[22] = new Path(s,this.sp[9],this.sp[10],treedata);
 
-	var sd = new Object();
-	sd = {
+	this.sd = new Object();
+	this.sd = {
 		1: { tt: 'Kether - Corona', tm: '1', tb: 'The Crown' },
 		2: { tt: 'Chokmah - Sapientia', tm: '2', tb: 'Wisdom' },
 		3: { tt: 'Binah - Compherensio', tm: '3', tb: 'Understanding' },
@@ -299,8 +343,8 @@ var TreeOfLife = function(width, el)
 		11: { tt: 'Daath - Scientia', tm: '11', tb: 'Knowledge' },
 	}
 
-	var pd = new Object();
-	pd = {
+	this.pd = new Object();
+	this.pd = {
 		1: { text: '0 · The Fool' },
 		2: { text: 'I · The Magus' },
 		3: { text: 'II · The Priestess' },
@@ -325,21 +369,23 @@ var TreeOfLife = function(width, el)
 		22: { text: 'XXI · The Universe' },
 	}
 
-	for(i=1;i<pt.length;i++) {
+	for(i=1;i<this.pt.length;i++) {
 
-		pt[i].data.uid = "path" + i; //hardcore string later!!
-		pt[i].data.text = pd[i].text;
+		this.pt[i].data.nid = i; //hardcore string later!!
+		this.pt[i].data.uid = "path" + i; //hardcore string later!!
+		this.pt[i].data.text = this.pd[i].text;
 
-		pt[i].draw();
+		this.pt[i].draw();
 	}
 
-	for(i=1;i<sp.length;i++) {
-		sp[i].data.uid = "sphere" + i; //hardcore prefix later!!
-		sp[i].data.text_top.text = sd[i].tt;
-		sp[i].data.text_middle.text = sd[i].tm;
-		sp[i].data.text_bottom.text = sd[i].tb;
+	for(i=1;i<this.sp.length;i++) {
+		this.sp[i].data.nid = i;
+		this.sp[i].data.uid = "sphere" + i; //hardcore prefix later!!
+		this.sp[i].data.text_top.text = this.sd[i].tt;
+		this.sp[i].data.text_middle.text = this.sd[i].tm;
+		this.sp[i].data.text_bottom.text = this.sd[i].tb;
 
-		sp[i].draw();
+		this.sp[i].draw();
 	}
 
 }
