@@ -2,7 +2,7 @@
 
 ## Demo
 
-https://kassius.github.io/svg-treeoflife
+https://iacchus.github.io/svg-treeoflife
 
 ## Requirements
 
@@ -15,7 +15,7 @@ snapsvg.io
 ### Clone the repo
 
 ```
-git clone https://github.com/kassius/svg-treeoflife.git
+git clone https://github.com/iacchus/svg-treeoflife.git
 ```
 
 ### Include the scripts
@@ -140,7 +140,7 @@ This class stylize the text (svg `<text>` element) for all the paths alike.
 
 As this script uses jQuery, you can tinker with the Tree Of Life style using your browsers code inspector (in Chrome, press CTRL + Shift + I) to open it, then for example:
 
-1. Enter https://kassius.github.io/svg-treeoflife
+1. Enter https://iacchus.github.io/svg-treeoflife
 2. If you are using chrome open code inspector (default Ctrl + Shift + i)
 3. Click the `console` tab, then enter some jQuery like this:
 
